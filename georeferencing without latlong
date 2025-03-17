@@ -1,0 +1,465 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMYXkaWh/Fg4UlXu/o8+yCS",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/SarsijNayan/earthengine-community/blob/master/georeferencing%20without%20latlong\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**bold text**"
+      ],
+      "metadata": {
+        "id": "So0-sguNP43y"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "gSxfDnw2WbhX"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JgAnFTFHNhdj",
+        "outputId": "d1ec2ad7-5e62-4d79-b851-f55f52163229"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Reading package lists... Done\n",
+            "Building dependency tree... Done\n",
+            "Reading state information... Done\n",
+            "The following additional packages will be installed:\n",
+            "  python3-numpy\n",
+            "Suggested packages:\n",
+            "  libgdal-grass python-numpy-doc python3-pytest\n",
+            "The following NEW packages will be installed:\n",
+            "  gdal-bin python3-gdal python3-numpy\n",
+            "0 upgraded, 3 newly installed, 0 to remove and 29 not upgraded.\n",
+            "Need to get 5,055 kB of archives.\n",
+            "After this operation, 25.1 MB of additional disk space will be used.\n",
+            "Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-numpy amd64 1:1.21.5-1ubuntu22.04.1 [3,467 kB]\n",
+            "Get:2 https://ppa.launchpadcontent.net/ubuntugis/ppa/ubuntu jammy/main amd64 python3-gdal amd64 3.6.4+dfsg-1~jammy0 [1,027 kB]\n",
+            "Get:3 https://ppa.launchpadcontent.net/ubuntugis/ppa/ubuntu jammy/main amd64 gdal-bin amd64 3.6.4+dfsg-1~jammy0 [561 kB]\n",
+            "Fetched 5,055 kB in 5s (986 kB/s)\n",
+            "Selecting previously unselected package python3-numpy.\n",
+            "(Reading database ... 125044 files and directories currently installed.)\n",
+            "Preparing to unpack .../python3-numpy_1%3a1.21.5-1ubuntu22.04.1_amd64.deb ...\n",
+            "Unpacking python3-numpy (1:1.21.5-1ubuntu22.04.1) ...\n",
+            "Selecting previously unselected package python3-gdal.\n",
+            "Preparing to unpack .../python3-gdal_3.6.4+dfsg-1~jammy0_amd64.deb ...\n",
+            "Unpacking python3-gdal (3.6.4+dfsg-1~jammy0) ...\n",
+            "Selecting previously unselected package gdal-bin.\n",
+            "Preparing to unpack .../gdal-bin_3.6.4+dfsg-1~jammy0_amd64.deb ...\n",
+            "Unpacking gdal-bin (3.6.4+dfsg-1~jammy0) ...\n",
+            "Setting up python3-numpy (1:1.21.5-1ubuntu22.04.1) ...\n",
+            "Setting up python3-gdal (3.6.4+dfsg-1~jammy0) ...\n",
+            "Setting up gdal-bin (3.6.4+dfsg-1~jammy0) ...\n",
+            "Processing triggers for man-db (2.10.2-1) ...\n",
+            "Collecting rasterio\n",
+            "  Downloading rasterio-1.4.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.1 kB)\n",
+            "Collecting affine (from rasterio)\n",
+            "  Downloading affine-2.4.0-py3-none-any.whl.metadata (4.0 kB)\n",
+            "Requirement already satisfied: attrs in /usr/local/lib/python3.11/dist-packages (from rasterio) (25.2.0)\n",
+            "Requirement already satisfied: certifi in /usr/local/lib/python3.11/dist-packages (from rasterio) (2025.1.31)\n",
+            "Requirement already satisfied: click>=4.0 in /usr/local/lib/python3.11/dist-packages (from rasterio) (8.1.8)\n",
+            "Collecting cligj>=0.5 (from rasterio)\n",
+            "  Downloading cligj-0.7.2-py3-none-any.whl.metadata (5.0 kB)\n",
+            "Requirement already satisfied: numpy>=1.24 in /usr/local/lib/python3.11/dist-packages (from rasterio) (1.26.4)\n",
+            "Collecting click-plugins (from rasterio)\n",
+            "  Downloading click_plugins-1.1.1-py2.py3-none-any.whl.metadata (6.4 kB)\n",
+            "Requirement already satisfied: pyparsing in /usr/local/lib/python3.11/dist-packages (from rasterio) (3.2.1)\n",
+            "Downloading rasterio-1.4.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (22.2 MB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m22.2/22.2 MB\u001b[0m \u001b[31m51.9 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hDownloading cligj-0.7.2-py3-none-any.whl (7.1 kB)\n",
+            "Downloading affine-2.4.0-py3-none-any.whl (15 kB)\n",
+            "Downloading click_plugins-1.1.1-py2.py3-none-any.whl (7.5 kB)\n",
+            "Installing collected packages: cligj, click-plugins, affine, rasterio\n",
+            "Successfully installed affine-2.4.0 click-plugins-1.1.1 cligj-0.7.2 rasterio-1.4.3\n"
+          ]
+        }
+      ],
+      "source": [
+        "!apt-get install -y gdal-bin python3-gdal\n",
+        "!pip install rasterio\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import requests\n",
+        "\n",
+        "# Download the PNG image\n",
+        "url = \"https://drive.google.com/uc?id=1PvNv-Q193pqGtKALPpgrV10F59jUy1dZ\"\n",
+        "response = requests.get(url)\n",
+        "with open(\"input_image.png\", \"wb\") as f:\n",
+        "    f.write(response.content)\n"
+      ],
+      "metadata": {
+        "id": "4JcJvhHhOLcJ"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from osgeo import gdal\n",
+        "\n",
+        "# Open the PNG file\n",
+        "input_png = \"input_image.png\"\n",
+        "output_tiff = \"output_image.tif\"\n",
+        "\n",
+        "# Convert PNG to GeoTIFF\n",
+        "gdal.Translate(output_tiff, input_png, format=\"GTiff\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "rP2hUNdKOaVO",
+        "outputId": "2ccae818-0291-45d7-f5bf-47456f3f1567"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<osgeo.gdal.Dataset; proxy of <Swig Object of type 'GDALDatasetShadow *' at 0x79a785e4f210> >"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from osgeo import gdal\n",
+        "\n",
+        "# Define geotransform (example: top-left x, pixel size, rotation, top-left y, rotation, pixel size)\n",
+        "x_min = 10.0  # Top-left x-coordinate\n",
+        "y_max = 20.0  # Top-left y-coordinate\n",
+        "pixel_size = 0.01  # Pixel size\n",
+        "geotransform = [x_min, pixel_size, 0, y_max, 0, -pixel_size]\n",
+        "\n",
+        "# Open the GeoTIFF file\n",
+        "dataset = gdal.Open(output_tiff, gdal.GA_Update)\n",
+        "\n",
+        "# Set geotransform and projection (example: WGS84)\n",
+        "dataset.SetGeoTransform(geotransform)\n",
+        "dataset.SetProjection(\"EPSG:4326\")  # WGS84\n",
+        "\n",
+        "# Save changes\n",
+        "dataset.FlushCache()\n",
+        "dataset = None\n"
+      ],
+      "metadata": {
+        "id": "BVwZ360bOga7"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import rasterio\n",
+        "from rasterio.plot import show\n",
+        "\n",
+        "# Open the GeoTIFF file\n",
+        "with rasterio.open(output_tiff) as src:\n",
+        "    print(\"CRS:\", src.crs)\n",
+        "    print(\"Transform:\", src.transform)\n",
+        "    show(src, cmap=\"grey\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 504
+        },
+        "id": "zx93_S7UOnRw",
+        "outputId": "b792c6e0-e80e-4291-f168-606d1edf6e85"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "CRS: EPSG:4326\n",
+            "Transform: | 0.01, 0.00, 10.00|\n",
+            "| 0.00,-0.01, 20.00|\n",
+            "| 0.00, 0.00, 1.00|\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 640x480 with 1 Axes>"
+            ],
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAbYAAAGiCAYAAACLTuP9AAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjAsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvlHJYcgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAFUtJREFUeJzt3X9s3AX9+PHXzW7dmOtBx1hXWQcGYYCmRiSAEghxGfDHxvghYgyMhH+MmwqYhSw6UaOZSFBRF1EzEDWoIWEDRoIyLBsEBhFogATLpg0rsA0UudLCuoW+v38Q+v3Udeu6drvra49H8vrj7t69e+XNlufevWspFUVRBAAkMaHaCwDAWBI2AFIRNgBSETYAUhE2AFIRNgBSETYAUhE2AFIRNgBSETYAUhlR2FauXBmnn356TJs2LY455phYtGhRdHR0DDpm586dsWTJkpg+fXp8+MMfjksvvTR27NgxpksDwN6MKGwbNmyIJUuWxKZNm+Khhx6K3bt3x/z586O3t3fgmOuuuy7uv//+uPvuu2PDhg3x2muvxSWXXDLmiwPAUEqj+SXIb7zxRhxzzDGxYcOGOOecc6JSqcSMGTPirrvuissuuywiIv7xj3/EySefHE888USceeaZY7Y4AAylbjRfXKlUIiKisbExIiKefvrp2L17d8ybN2/gmLlz50ZLS8tew9bX1xd9fX0Dt/v7++PNN9+M6dOnR6lUGs16ACRRFEW8/fbb0dzcHBMm7PubjQcctv7+/rj22mvjs5/9bHz84x+PiIjt27fHpEmT4sgjjxx07MyZM2P79u1DPs/KlSvju9/97oGuAcBhpKurK4499th9HnPAn4pcsmRJvPDCC/GnP/3pQJ8iIiKWL18elUplYLZu3Tqq5wMgr2nTpg17zAFdsS1dujTWrVsXGzduHFTOpqam2LVrV7z11luDrtp27NgRTU1NQz5XfX191NfXH8gaABxm9uctqhFdsRVFEUuXLo01a9bE3/72tzj++OMHPX7aaafFxIkT4+GHHx64r6OjI7Zu3RpnnXXWSF4KAA7IiK7YlixZEnfddVfce++9MW3atIH3zcrlckyZMiXK5XJcc801cf3110djY2M0NDTEV7/61TjrrLN8IhKAQ6MYgYgYcu64446BY959993iK1/5SnHUUUcVRxxxRHHxxRcX27Zt2+/XqFQqe30dY4wxh/dUKpVhOzKqn2M7GLq7u6NcLld7DQBqUKVSiYaGhn0e43dFApCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZDKiMO2cePGWLBgQTQ3N0epVIq1a9cOenzHjh1x9dVXR3NzcxxxxBFxwQUXxObNm8dqXwDYpxGHrbe3N1pbW2PVqlV7PFYURSxatCj+9a9/xb333hvPPvtszJkzJ+bNmxe9vb1jsjAA7FMxChFRrFmzZuB2R0dHERHFCy+8MHDfe++9V8yYMaP4zW9+M+Rz7Ny5s6hUKgPT1dVVRIQxxhizx1QqlWHbNKbvsfX19UVExOTJkwfumzBhQtTX18djjz025NesXLkyyuXywMyePXssVwLgMDOmYZs7d260tLTE8uXL47///W/s2rUrbrrppnjllVdi27ZtQ37N8uXLo1KpDExXV9dYrgTAYWZMwzZx4sS455574qWXXorGxsY44ogjoq2tLS688MKYMGHol6qvr4+GhoZBAwAHqm6sn/C0006L9vb2qFQqsWvXrpgxY0acccYZ8elPf3qsXwoA9nDQfo6tXC7HjBkzYvPmzfH3v/89LrroooP1UgAwYMRXbD09PbFly5aB252dndHe3h6NjY3R0tISd999d8yYMSNaWlri+eefj69//euxaNGimD9//pguDgBDGulH/Nva2ob8CObixYuLoiiKW2+9tTj22GOLiRMnFi0tLcW3vvWtoq+vb7+fv1KpVP3jpMYYY2pz9ufj/qWiKIqoId3d3VEul6u9BgA1qFKpDPshQ78rEoBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFSEDYBUhA2AVIQNgFRGHLaNGzfGggULorm5OUqlUqxdu3bQ4z09PbF06dI49thjY8qUKXHKKafEbbfdNlb7AsA+jThsvb290draGqtWrRry8euvvz4efPDB+MMf/hAvvvhiXHvttbF06dK47777Rr0sAAyrGIWIKNasWTPovlNPPbX43ve+N+i+T33qU8U3v/nN/XrOSqVSRIQxxhizx1QqlWE7MubvsX3mM5+J++67L1599dUoiiLa2tripZdeivnz5w95fF9fX3R3dw8aADhg+3t1NpSIPa/Ydu7cWVx11VVFRBR1dXXFpEmTijvvvHOvz3HjjTdW/V8AxhhjxsdU5Yrt5z//eWzatCnuu+++ePrpp+OWW26JJUuWxPr164c8fvny5VGpVAamq6trrFcC4HAyllds77zzTjFx4sRi3bp1g4675pprivPPP3+/ntN7bMYYY/Y2h/yKbffu3bF79+6YMGHw037oQx+K/v7+sXwpABhS3Ui/oKenJ7Zs2TJwu7OzM9rb26OxsTFaWlri3HPPjWXLlsWUKVNizpw5sWHDhvjd734XP/7xj8d0cQAY0oi+91gURVtb25CXh4sXLy6Koii2bdtWXH311UVzc3MxefLk4qSTTipuueWWor+/37cijTHGjGr251uRpaIoiqgh3d3dUS6Xq70GADWoUqlEQ0PDPo/xuyIBSEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASEXYAEhF2ABIRdgASGXEYdu4cWMsWLAgmpubo1Qqxdq1awc9XiqVhpybb755rHYGgL0acdh6e3ujtbU1Vq1aNeTj27ZtGzS33357lEqluPTSS0e9LAAMp26kX3DhhRfGhRdeuNfHm5qaBt2+995747zzzouPfvSjI98OAEZoxGEbiR07dsQDDzwQd955516P6evri76+voHb3d3dB3MlAJI7qB8eufPOO2PatGlxySWX7PWYlStXRrlcHpjZs2cfzJUASO6ghu3222+PL33pSzF58uS9HrN8+fKoVCoD09XVdTBXAiC5g/atyEcffTQ6Ojriz3/+8z6Pq6+vj/r6+oO1BgCHmYN2xbZ69eo47bTTorW19WC9BADsYcRXbD09PbFly5aB252dndHe3h6NjY3R0tISEe9/AOTuu++OW265Zew2BYD9UYxQW1tbERF7zOLFiweO+dWvflVMmTKleOutt0b69EWlUhny+Y0xxphKpTJsR0pFURRRQ7q7u6NcLld7DQBqUKVSiYaGhn0e43dFApCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZCKsAGQirABkIqwAZDKiMO2cePGWLBgQTQ3N0epVIq1a9fuccyLL74YCxcujHK5HFOnTo3TTz89tm7dOhb7AsA+jThsvb290draGqtWrRry8X/+859x9tlnx9y5c+ORRx6J5557LlasWBGTJ08e9bIAMJxSURTFAX9xqRRr1qyJRYsWDdx3xRVXxMSJ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\n"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')\n",
+        "\n",
+        "# Move the file to your Google Drive\n",
+        "!cp output_image.tif /content/drive/My\\ Drive/\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "M4YB8QKZO0Rm",
+        "outputId": "ef5d9c43-8052-453a-bc98-41729dd51eba"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mounted at /content/drive\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!gdalinfo output_image.tif"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "EbE_Oc4nWdHV",
+        "outputId": "7412a336-5353-4099-997e-000ea3986bc9"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Driver: GTiff/GeoTIFF\n",
+            "Files: output_image.tif\n",
+            "Size is 484, 458\n",
+            "Coordinate System is:\n",
+            "GEOGCRS[\"WGS 84\",\n",
+            "    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n",
+            "        MEMBER[\"World Geodetic System 1984 (Transit)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G730)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G873)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1150)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1674)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1762)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G2139)\"],\n",
+            "        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n",
+            "            LENGTHUNIT[\"metre\",1]],\n",
+            "        ENSEMBLEACCURACY[2.0]],\n",
+            "    PRIMEM[\"Greenwich\",0,\n",
+            "        ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "    CS[ellipsoidal,2],\n",
+            "        AXIS[\"geodetic latitude (Lat)\",north,\n",
+            "            ORDER[1],\n",
+            "            ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "        AXIS[\"geodetic longitude (Lon)\",east,\n",
+            "            ORDER[2],\n",
+            "            ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "    USAGE[\n",
+            "        SCOPE[\"Horizontal component of 3D system.\"],\n",
+            "        AREA[\"World.\"],\n",
+            "        BBOX[-90,-180,90,180]],\n",
+            "    ID[\"EPSG\",4326]]\n",
+            "Data axis to CRS axis mapping: 2,1\n",
+            "Origin = (10.000000000000000,20.000000000000000)\n",
+            "Pixel Size = (0.010000000000000,-0.010000000000000)\n",
+            "Metadata:\n",
+            "  AREA_OR_POINT=Area\n",
+            "Image Structure Metadata:\n",
+            "  INTERLEAVE=PIXEL\n",
+            "Corner Coordinates:\n",
+            "Upper Left  (  10.0000000,  20.0000000) ( 10d 0' 0.00\"E, 20d 0' 0.00\"N)\n",
+            "Lower Left  (  10.0000000,  15.4200000) ( 10d 0' 0.00\"E, 15d25'12.00\"N)\n",
+            "Upper Right (  14.8400000,  20.0000000) ( 14d50'24.00\"E, 20d 0' 0.00\"N)\n",
+            "Lower Right (  14.8400000,  15.4200000) ( 14d50'24.00\"E, 15d25'12.00\"N)\n",
+            "Center      (  12.4200000,  17.7100000) ( 12d25'12.00\"E, 17d42'36.00\"N)\n",
+            "Band 1 Block=484x4 Type=Byte, ColorInterp=Red\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 2 Block=484x4 Type=Byte, ColorInterp=Green\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 3 Block=484x4 Type=Byte, ColorInterp=Blue\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 4 Block=484x4 Type=Byte, ColorInterp=Alpha\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!gdalinfo output_image.tif"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Ug8Xx7WGW3Nq",
+        "outputId": "588cec07-8fce-4749-dc1e-a67025168039"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Driver: GTiff/GeoTIFF\n",
+            "Files: output_image.tif\n",
+            "Size is 484, 458\n",
+            "Coordinate System is:\n",
+            "GEOGCRS[\"WGS 84\",\n",
+            "    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n",
+            "        MEMBER[\"World Geodetic System 1984 (Transit)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G730)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G873)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1150)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1674)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G1762)\"],\n",
+            "        MEMBER[\"World Geodetic System 1984 (G2139)\"],\n",
+            "        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n",
+            "            LENGTHUNIT[\"metre\",1]],\n",
+            "        ENSEMBLEACCURACY[2.0]],\n",
+            "    PRIMEM[\"Greenwich\",0,\n",
+            "        ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "    CS[ellipsoidal,2],\n",
+            "        AXIS[\"geodetic latitude (Lat)\",north,\n",
+            "            ORDER[1],\n",
+            "            ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "        AXIS[\"geodetic longitude (Lon)\",east,\n",
+            "            ORDER[2],\n",
+            "            ANGLEUNIT[\"degree\",0.0174532925199433]],\n",
+            "    USAGE[\n",
+            "        SCOPE[\"Horizontal component of 3D system.\"],\n",
+            "        AREA[\"World.\"],\n",
+            "        BBOX[-90,-180,90,180]],\n",
+            "    ID[\"EPSG\",4326]]\n",
+            "Data axis to CRS axis mapping: 2,1\n",
+            "Origin = (10.000000000000000,20.000000000000000)\n",
+            "Pixel Size = (0.010000000000000,-0.010000000000000)\n",
+            "Metadata:\n",
+            "  AREA_OR_POINT=Area\n",
+            "Image Structure Metadata:\n",
+            "  INTERLEAVE=PIXEL\n",
+            "Corner Coordinates:\n",
+            "Upper Left  (  10.0000000,  20.0000000) ( 10d 0' 0.00\"E, 20d 0' 0.00\"N)\n",
+            "Lower Left  (  10.0000000,  15.4200000) ( 10d 0' 0.00\"E, 15d25'12.00\"N)\n",
+            "Upper Right (  14.8400000,  20.0000000) ( 14d50'24.00\"E, 20d 0' 0.00\"N)\n",
+            "Lower Right (  14.8400000,  15.4200000) ( 14d50'24.00\"E, 15d25'12.00\"N)\n",
+            "Center      (  12.4200000,  17.7100000) ( 12d25'12.00\"E, 17d42'36.00\"N)\n",
+            "Band 1 Block=484x4 Type=Byte, ColorInterp=Red\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 2 Block=484x4 Type=Byte, ColorInterp=Green\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 3 Block=484x4 Type=Byte, ColorInterp=Blue\n",
+            "  Mask Flags: PER_DATASET ALPHA \n",
+            "Band 4 Block=484x4 Type=Byte, ColorInterp=Alpha\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "gdal.Translate(\"output_image_no_alpha.tif\", \"input_image.png\", format=\"GTiff\", noData=0)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "iFdgtgGyW-mY",
+        "outputId": "0de4df73-27a0-4350-da6d-06289324af2a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<osgeo.gdal.Dataset; proxy of <Swig Object of type 'GDALDatasetShadow *' at 0x79a785e4f1e0> >"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!gdalwarp -t_srs EPSG:4326 output_image.tif reprojected_image.tif"
+      ],
+      "metadata": {
+        "id": "X120YdloXDU7",
+        "outputId": "a290a91f-a213-4771-b64f-32daee60db8b",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Using band 4 of source image as alpha.\n",
+            "Creating output file that is 484P x 458L.\n",
+            "Processing output_image.tif [1/1] : 0...10...20...30...40...50...60...70...80...90...100 - done.\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
