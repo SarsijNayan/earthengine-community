@@ -1,0 +1,46 @@
+// Load HydroRIVERS dataset (for rivers)
+var rivers = ee.FeatureCollection("WWF/HydroSHEDS/v1/FreeFlowingRivers");
+
+// Define Kamla Basin using the given geometry
+var kamlaBasin = /* color: #ffc82d */ee.Geometry.Polygon(
+        [[[86.42027561455856, 26.035940135992437],
+          [86.4628542064279, 26.115517812720505],
+          [86.50410037075598, 26.19078116774968],
+          [86.52539146059718, 26.212657152433824],
+          [86.54119686814188, 26.236994817631867],
+          [86.58926049465244, 26.34416050483409],
+          [86.5247152489824, 26.540943423463546],
+          [86.5252170149931, 26.583003511157678],
+          [86.5320857107979, 26.63274681238537],
+          [86.55318602151188, 26.709749314366107],
+          [86.57159729934644, 26.818618349090418],
+          [86.35454943710768, 26.919102931632246],
+          [86.12925869058063, 27.002363427516404],
+          [86.09629048680051, 26.67631761863463],
+          [86.14877527167592, 26.584550349669538],
+          [86.1954818217478, 26.496065798512525],
+          [86.16800780542619, 26.390286557865828],
+          [86.15152342754266, 26.32874245931449],
+          [86.22845145183541, 26.227739618220248],
+          [86.38230687012896, 26.010657144251407]]]);
+
+
+// Filter major tributaries using Strahler Stream Order (ORD_STRA ≥ 4)
+var mainRivers = rivers
+    .filterBounds(kamlaBasin)
+    .filter(ee.Filter.gte("ORD_STRA", 4));  // Adjust to get the required rivers
+
+// Check if major rivers are found
+print("Total Main Rivers Found:", mainRivers.size());
+
+// Ensure Main Rivers have attributes to avoid empty shapefile
+var riversForExport = mainRivers.map(function(f) {
+  return f.set("name", "Main_Tributary");
+});
+
+// Export only the River Shapefile (with .prj file)
+Export.table.toDrive({
+  collection: riversForExport,
+  description: "Kamla_Balan_Main_Rivers",
+  fileFormat: "SHP"
+});
